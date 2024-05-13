@@ -1,16 +1,52 @@
 package main
 
 import (
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"context"
+	"fmt"
+	"log"
+	"main/db"
+	"main/handler"
+	"net"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 func main() {
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World!"))
-	})
-	http.ListenAndServe(":8080", r)
+	listener, err := net.Listen("tcp", ":8080")
+	if err != nil {
+		log.Fatalf("Error occurred: %s", err.Error())
+	}
+	dbUser, dbPassword, dbName :=
+		os.Getenv("POSTGRES_USER"),
+		os.Getenv("POSTGRES_PASSWORD"),
+		os.Getenv("POSTGRES_DB")
+	database, err := db.Initialize(dbUser, dbPassword, dbName)
+	if err != nil {
+		log.Fatalf("Could not set up database: %v", err)
+	}
+	defer database.Conn.Close()
+	httpHandler := handler.NewHandler(database)
+	server := &http.Server{
+		Handler: httpHandler,
+	}
+	go func() {
+		server.Serve(listener)
+	}()
+	defer Stop(server)
+	log.Printf("Started server on %s", "8080")
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
+	log.Println(fmt.Sprint(<-ch))
+	log.Println("Stopping API server.")
+}
+func Stop(server *http.Server) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Printf("Could not shut down server correctly: %v\n", err)
+		os.Exit(1)
+	}
 }
