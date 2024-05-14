@@ -18,29 +18,25 @@ FAST_RUN = False
 
 # build dataframe
 
-data_path = "./data/mels"
+data_path = "./data/final/"
 
-filenames = os.listdir(data_path)
-categories = []
-for filename in filenames:
-    category = filename.split('_')[0]
-    categories.append(category)
+def data_frame_from_directory(dir_name):
+    filenames = os.listdir(data_path + dir_name)
+    categories = []
+    for filename in filenames:
+        category = filename.split('_')[0]
+        categories.append(category)
+    df = pd.DataFrame({
+        'filename': [dir_name + '/' + filename for filename in filenames],
+        'category': categories
+    })
+    return df
 
-df = pd.DataFrame({
-    'filename': filenames,
-    'category': categories
-})
+train_df = data_frame_from_directory("train")
+validate_df = data_frame_from_directory("val")
+test_df = data_frame_from_directory("test")
 
-#split datasets into train, validation and test
-
-train_validate_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
-train_df, validate_df = train_test_split(train_validate_df, test_size=0.2, random_state=43)
-train_df = train_df.reset_index(drop=True)
-validate_df = validate_df.reset_index(drop=True)
-test_df = test_df.reset_index(drop=True)
-
-total_train = train_df.shape[0]
-total_validate = validate_df.shape[0]
+print(train_df)
 
 datagen = ImageDataGenerator(rescale=1./255)
 
@@ -153,17 +149,17 @@ plt.show()
 loss, accuracy = model.evaluate(test_generator)
 print(f'Test accuracy: {accuracy * 100:.2f}%')
 
-# predictions = model.predict(test_generator)
-# predicted_classes = np.argmax(predictions, axis=1)
-# true_classes = test_generator.classes
-# class_labels = list(test_generator.class_indices.keys())
+predictions = model.predict(test_generator)
+predicted_classes = np.argmax(predictions, axis=1)
+true_classes = test_generator.classes
+class_labels = list(test_generator.class_indices.keys())
 
-# # Display some predictions
-# plt.figure(figsize=(12, 12))
-# for i in range(9):
-#     plt.subplot(3, 3, i + 1)
-#     plt.imshow(load_img(os.path.join(data_path, test_df.iloc[i]['filename']), target_size=(IMAGE_WIDTH, IMAGE_HEIGHT)))
-#     plt.title(f"True: {class_labels[true_classes[i]]}\nPred: {class_labels[predicted_classes[i]]}")
-#     plt.axis('off')
-# plt.tight_layout()
-# plt.show()
+# Display some predictions
+plt.figure(figsize=(12, 12))
+for i in range(9):
+    plt.subplot(3, 3, i + 1)
+    plt.imshow(load_img(os.path.join(data_path, test_df.iloc[i]['filename']), target_size=(IMAGE_WIDTH, IMAGE_HEIGHT)))
+    plt.title(f"True: {class_labels[true_classes[i]]}\nPred: {class_labels[predicted_classes[i]]}")
+    plt.axis('off')
+plt.tight_layout()
+plt.show()

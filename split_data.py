@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import numpy as np
+import shutil
 
 # we cant use built in functions because datasets cannot share segments from the same recording to prevent data leakage
 
@@ -57,5 +58,12 @@ for category_name in category_names:
     val_set= pd.concat([val_set, allocate_recordings(val_wanted_segments)], axis=0)
 
     test_set = pd.concat([test_set, recordings_df], axis=0)
-    
-print(train_set)
+
+# this assumes that directories are already created
+for i, row in segments_df.iterrows():
+    if row["recording"] in train_set["recording"].values.tolist():
+        shutil.copy2(mels_path + row["filename"], dest_path + "train")
+    if row["recording"] in val_set["recording"].values.tolist():
+        shutil.copy2(mels_path + row["filename"], dest_path + "val")
+    if row["recording"] in test_set["recording"].values.tolist():
+        shutil.copy2(mels_path + row["filename"], dest_path + "test")
