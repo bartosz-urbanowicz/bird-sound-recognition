@@ -48,15 +48,19 @@ const AudioRecorder = () => {
            const audioUrl = URL.createObjectURL(audioBlob);
            setAudio(audioUrl);
            setAudioChunks([]);
+           setRecordingStatus("inactive")
         };
     };
 
     return (
-        <div>
-            <div className="flex justify-center items-center border border-black rounded-full h-[2em] w-[2em] text-3xl">
+        <div className="flex justify-center items-center flex-col">
+            <h2 className="text-xl">Tap to record</h2>
+            <div className={`flex justify-center items-center border border-black rounded-full h-[2em] w-[2em] text-3xl m-[1em] ${
+                recordingStatus == "recording" ? "blob" : null
+            }`}>
                 {!permission ? (
                     <button onClick={getMicrophonePermission} type="button">
-                        Get Microphone
+                        <i className="fa-solid fa-microphone"></i>
                     </button>
                 ): null}
                 {permission && recordingStatus == "inactive" ? (
@@ -70,13 +74,16 @@ const AudioRecorder = () => {
                     </button>
                 ): null}
             </div>
-            {audio ? (
-                <div className="audio-container">
-                <audio src={audio} controls></audio>
-                <a download href={audio}>
-                    Download Recording
-                </a>
+            <div>
+                Or upload audio file
             </div>
+            {audio ? (
+                <div className="audio-container flex items-center justify-center">
+                    <audio src={audio} controls></audio>
+                    <a download href={audio}>
+                    <i class="fa-solid fa-download m-[0.5em]"></i>
+                    </a>
+                </div>
             ) : null}
         </div>
     );

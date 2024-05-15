@@ -2,9 +2,7 @@ import numpy as np
 import pandas as pd
 from tensorflow.keras.preprocessing.image import ImageDataGenerator, load_img
 from keras.utils import to_categorical
-from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-import random
 import os
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, Activation, BatchNormalization
@@ -36,11 +34,15 @@ train_df = data_frame_from_directory("train")
 validate_df = data_frame_from_directory("val")
 test_df = data_frame_from_directory("test")
 
-print(train_df)
 
-datagen = ImageDataGenerator(rescale=1./255)
 
-train_generator = datagen.flow_from_dataframe(
+train_datagen = ImageDataGenerator(
+    rescale=1./255,
+)
+
+validation_test_datagen = ImageDataGenerator(rescale=1./255)
+
+train_generator = train_datagen.flow_from_dataframe(
     train_df,
     data_path,
     x_col="filename",
@@ -51,7 +53,7 @@ train_generator = datagen.flow_from_dataframe(
     shuffle=True
 )
 
-validation_generator = datagen.flow_from_dataframe(
+validation_generator = validation_test_datagen.flow_from_dataframe(
     validate_df,
     data_path,
     x_col="filename",
@@ -61,7 +63,7 @@ validation_generator = datagen.flow_from_dataframe(
     class_mode="categorical",
 )
 
-test_generator = datagen.flow_from_dataframe(
+test_generator = validation_test_datagen.flow_from_dataframe(
     test_df,
     data_path,
     x_col="filename",
@@ -125,7 +127,7 @@ model.fit(
         ]
 )
 
-model.save_weights("model.weights.h5")
+model.save_weights("./models/model_1_2_classes.weights.h5")
 
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
 ax1.plot(model.history.history['loss'], color='b', label="Training loss")
