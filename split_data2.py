@@ -72,5 +72,3 @@ for i, row in segments_df.iterrows():
         shutil.copy2(src_path + row["dir name"] + "/" + row["filename"], dest_path + "val")
     if row["recording"] in test_set["recording"].values.tolist():
         shutil.copy2(src_path + row["dir name"] + "/" + row["filename"], dest_path + "test")
-
-# augment data

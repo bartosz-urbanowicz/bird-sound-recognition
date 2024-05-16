@@ -11,8 +11,8 @@ from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from kapre.composed import get_melspectrogram_layer
 import librosa
 
-IMAGE_WIDTH = 64
-IMAGE_HEIGHT = 64
+IMAGE_WIDTH = 128
+IMAGE_HEIGHT = 128
 IMAGE_CHANNELS = 3
 BATCH_SIZE = 32
 AUDIO_DURATION = 5
@@ -23,15 +23,25 @@ FAST_RUN = False
 
 data_path = "./data/final2/"
 
+class_labels = [
+    "Parus major",
+    "Emberiza citrinella",
+    "Sylvia atricapilla",
+    "Fringilla coelebs",
+    "Phylloscopus collybita",
+    "Turdus philomelos",
+    "Periparus ater",
+    "Erithacus rubecula",
+    "Turdus merula",
+    "Aegolius funereus"
+    ]
+
 def data_frame_from_directory(dir_name):
     filenames = os.listdir(data_path + dir_name)
     categories = []
     for filename in filenames:
         category = filename.split('_')[0]
-        if category == "Parus major":
-            categories.append(1)
-        else:
-            categories.append(0)
+        categories.append(class_labels.index(category))
     df = pd.DataFrame({
         'filename': [dir_name + '/' + filename for filename in filenames],
         'category': categories
@@ -105,26 +115,31 @@ model = Sequential()
 
 model.add(mel_spectrogram_layer)
 
-model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_CHANNELS))) # 32 3x3 filters
+model.add(Conv2D(32, (5, 5), activation='relu', input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_CHANNELS))) # 32 3x3 filters
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
+model.add(Dropout(0.4))
 
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(64, (5, 5), activation='relu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
+model.add(Dropout(0.2))
 
-model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(Conv2D(128, (5, 5), activation='relu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
+model.add(Dropout(0.2))
+
+model.add(Conv2D(256, (5, 5), activation='relu'))
+model.add(BatchNormalization())
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.2))
 
 model.add(Flatten())
 model.add(Dense(512, activation='relu'))
 model.add(BatchNormalization())
 model.add(Dropout(0.5))
-model.add(Dense(2, activation='softmax'))
+model.add(Dense(train_generator.n_classes, activation='softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
@@ -153,7 +168,7 @@ model.fit(
         ]
 )
 
-model.save_weights("./models/model_2_2_classes.weights.h5")
+model.save_weights("./models/model_2_10_classes.weights.h5")
 
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
 ax1.plot(model.history.history['loss'], color='b', label="Training loss")
@@ -176,18 +191,3 @@ plt.show()
 
 loss, accuracy = model.evaluate(test_generator)
 print(f'Test accuracy: {accuracy * 100:.2f}%')
-
-predictions = model.predict(test_generator)
-predicted_classes = np.argmax(predictions, axis=1)
-true_classes = test_generator.classes
-class_labels = list(test_generator.class_indices.keys())
-
-# Display some predictions
-plt.figure(figsize=(12, 12))
-for i in range(9):
-    plt.subplot(3, 3, i + 1)
-    plt.imshow(load_img(os.path.join(data_path, test_df.iloc[i]['filename']), target_size=(IMAGE_WIDTH, IMAGE_HEIGHT)))
-    plt.title(f"True: {class_labels[true_classes[i]]}\nPred: {class_labels[predicted_classes[i]]}")
-    plt.axis('off')
-plt.tight_layout()
-plt.show()

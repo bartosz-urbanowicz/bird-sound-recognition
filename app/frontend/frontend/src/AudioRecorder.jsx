@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const mimeType = "audio/webm";
 
@@ -26,6 +26,10 @@ const AudioRecorder = () => {
             alert("The MediaRecorder API is not supported in your browser.");
         }
     };
+
+    useEffect(() => {
+        getMicrophonePermission()
+    }, [])
 
     const startRecording = async () => {
         setRecordingStatus("recording");
@@ -58,24 +62,22 @@ const AudioRecorder = () => {
             <div className={`flex justify-center items-center border border-black rounded-full h-[2em] w-[2em] text-3xl m-[1em] ${
                 recordingStatus == "recording" ? "blob" : null
             }`}>
-                {!permission ? (
-                    <button onClick={getMicrophonePermission} type="button">
-                        <i className="fa-solid fa-microphone"></i>
-                    </button>
-                ): null}
-                {permission && recordingStatus == "inactive" ? (
+                {recordingStatus == "inactive" ? (
                     <button onClick={startRecording} type="button">
                         <i className="fa-solid fa-microphone"></i>
                     </button>
                 ): null}
                 {recordingStatus == "recording" ? (
                     <button onClick={stopRecording} type="button">
-                        <i className="fa-solid fa-microphone-slash"></i>
+                        <i className="fa-solid fa-stop"></i>
                     </button>
                 ): null}
             </div>
             <div>
-                Or upload audio file
+                <form action="">
+                    <input type="file"/>
+                    <button type="submit">Upload</button>
+                </form>
             </div>
             {audio ? (
                 <div className="audio-container flex items-center justify-center">
