@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const mimeType = "audio/webm";
 
-const AudioRecorder = () => {
-    const [permission, setPermission] = useState(false);
+const AudioRecorder = ({ onAudioRecorded }) => {
+    const navigate = useNavigate()
     const [stream, setStream] = useState(null);
     const [recordingStatus, setRecordingStatus] = useState("inactive");
     const mediaRecorder = useRef(null);
     const [audioChunks, setAudioChunks] = useState([]);
-    const [audio, setAudio] = useState(null);
 
     const getMicrophonePermission = async () => {
         if ("MediaRecorder" in window) {
@@ -17,7 +17,6 @@ const AudioRecorder = () => {
                     audio: true,
                     video: false,
                 });
-                setPermission(true);
                 setStream(streamData);
             } catch (err) {
                 alert(err.message);
@@ -50,15 +49,16 @@ const AudioRecorder = () => {
         mediaRecorder.current.onstop = () => {
            const audioBlob = new Blob(audioChunks, { type: mimeType });
            const audioUrl = URL.createObjectURL(audioBlob);
-           setAudio(audioUrl);
+           onAudioRecorded(audioBlob, audioUrl);
            setAudioChunks([]);
            setRecordingStatus("inactive")
+           navigate("/submit")
         };
     };
 
     return (
         <div className="flex justify-center items-center flex-col">
-            <h2 className="text-xl">Tap to record</h2>
+            <h2 className="text-xl">{recordingStatus == "recording" ? "Recording..." : "Tap to record"}</h2>
             <div className={`flex justify-center items-center border border-black rounded-full h-[2em] w-[2em] text-3xl m-[1em] ${
                 recordingStatus == "recording" ? "blob" : null
             }`}>
@@ -79,14 +79,6 @@ const AudioRecorder = () => {
                     <button type="submit">Upload</button>
                 </form>
             </div>
-            {audio ? (
-                <div className="audio-container flex items-center justify-center">
-                    <audio src={audio} controls></audio>
-                    <a download href={audio}>
-                    <i class="fa-solid fa-download m-[0.5em]"></i>
-                    </a>
-                </div>
-            ) : null}
         </div>
     );
 };
