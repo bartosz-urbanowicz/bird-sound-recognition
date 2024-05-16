@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 const Submit = ({ audioBlob, audioUrl }) => {
+    const api_url = "http://localhost:5000/"
 
     function blobToBase64(blob) {
         return new Promise((resolve, _) => {
@@ -14,7 +15,7 @@ const Submit = ({ audioBlob, audioUrl }) => {
         e.preventDefault()
         const base64audio = await blobToBase64(audioBlob)
         try {
-            const response = await axios.post('https://example.com/api/post', base64audio);
+            const response = await axios.post(api_url, {data: base64audio});
             console.log('Post successful!', response.data);
           } catch (error) {
             console.error('Error while posting:', error);

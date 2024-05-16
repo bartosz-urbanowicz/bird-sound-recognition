@@ -118,22 +118,22 @@ model.add(mel_spectrogram_layer)
 model.add(Conv2D(32, (5, 5), activation='relu', input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_CHANNELS))) # 32 3x3 filters
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.4))
+model.add(Dropout(0.3))
 
 model.add(Conv2D(64, (5, 5), activation='relu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.2))
+model.add(Dropout(0.3))
 
 model.add(Conv2D(128, (5, 5), activation='relu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.2))
+model.add(Dropout(0.3))
 
 model.add(Conv2D(256, (5, 5), activation='relu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.2))
+model.add(Dropout(0.3))
 
 model.add(Flatten())
 model.add(Dense(512, activation='relu'))
@@ -145,7 +145,7 @@ model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['ac
 
 #define model callbacks
 
-earlystop = EarlyStopping(patience=15)
+earlystop = EarlyStopping(patience=10)
 
 learning_rate_reduction = ReduceLROnPlateau(
     monitor='val_accuracy',
