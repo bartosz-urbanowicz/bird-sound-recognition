@@ -9,24 +9,29 @@ train_size = 0.8
 val_size = 0.1
 test_size = 0.1
 
-mels_path = "./data/mels/"
-dest_path = "./data/final/"
+src_path = "./data/segmented/"
+dest_path = "./data/final2/"
 
-filenames = os.listdir(mels_path)
+dir_names = os.listdir(src_path)
 categories = []
 recordings = []
-for filename in filenames:
-    category = filename.split("_")[0]
-    categories.append(category)
-    recording = filename.split("_")[0] + "_" + filename.split('_')[1]
-    recordings.append(recording)
+filenames = []
+file_dir_names = []
+for dir_name in dir_names:
+    filenames.extend(os.listdir(src_path + dir_name))
+    for filename in os.listdir(src_path + dir_name):
+        category = filename.split("_")[0]
+        categories.append(category)
+        recording = filename.split("_")[0] + "_" + filename.split('_')[1]
+        recordings.append(recording)
+        file_dir_names.append(dir_name)
 
 segments_df = pd.DataFrame({
+    "dir name":file_dir_names,
     "filename": filenames,
     "category": categories,
     "recording": recordings
 })
-
 
 category_names = segments_df["category"].unique()
 
@@ -62,8 +67,8 @@ for category_name in category_names:
 # this assumes that directories are already created
 for i, row in segments_df.iterrows():
     if row["recording"] in train_set["recording"].values.tolist():
-        shutil.copy2(mels_path + row["filename"], dest_path + "train")
+        shutil.copy2(src_path + row["dir name"] + "/"+ row["filename"], dest_path + "train")
     if row["recording"] in val_set["recording"].values.tolist():
-        shutil.copy2(mels_path + row["filename"], dest_path + "val")
+        shutil.copy2(src_path + row["dir name"] + "/" + row["filename"], dest_path + "val")
     if row["recording"] in test_set["recording"].values.tolist():
-        shutil.copy2(mels_path + row["filename"], dest_path + "test")
+        shutil.copy2(src_path + row["dir name"] + "/" + row["filename"], dest_path + "test")

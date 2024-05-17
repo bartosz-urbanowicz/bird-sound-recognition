@@ -1,5 +1,3 @@
-import librosa.display
-import matplotlib.pyplot as plt
 from pydub import AudioSegment
 from pydub.utils import make_chunks
 import os

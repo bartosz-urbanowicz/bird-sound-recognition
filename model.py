@@ -16,7 +16,7 @@ FAST_RUN = False
 
 # build dataframe
 
-data_path = "./data/final/"
+data_path = "./data/final3/"
 
 def data_frame_from_directory(dir_name):
     filenames = os.listdir(data_path + dir_name)
@@ -101,7 +101,7 @@ model.add(Flatten())
 model.add(Dense(512, activation='relu'))
 model.add(BatchNormalization())
 model.add(Dropout(0.5))
-model.add(Dense(2, activation='softmax'))
+model.add(Dense(10, activation='softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
@@ -132,7 +132,7 @@ model.fit(
         ]
 )
 
-model.save_weights("./models/model_1_2_classes.weights.h5")
+model.save("./models/model_1_10_classes.keras")
 
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
 ax1.plot(model.history.history['loss'], color='b', label="Training loss")
@@ -149,7 +149,7 @@ ax2.legend(loc='best', shadow=True)
 ax2.grid(True)
 
 plt.tight_layout()
-plt.show()
+plt.savefig('./plots/model_1_10_classes.png')
 
 # evaluate model
 

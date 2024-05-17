@@ -17,7 +17,7 @@ IMAGE_CHANNELS = 3
 BATCH_SIZE = 32
 AUDIO_DURATION = 5
 SR = 22050
-FAST_RUN = False
+FAST_RUN = True
 
 # build dataframe
 
@@ -157,7 +157,7 @@ learning_rate_reduction = ReduceLROnPlateau(
 
 # fit model
 
-epochs=3 if FAST_RUN else 50
+epochs=1 if FAST_RUN else 50
 model.fit(
     train_generator,
     epochs = epochs,
@@ -168,7 +168,7 @@ model.fit(
         ]
 )
 
-model.save_weights("./models/model_2_10_classes.weights.h5")
+model.save("./models/model_2_10_classes.keras")
 
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
 ax1.plot(model.history.history['loss'], color='b', label="Training loss")

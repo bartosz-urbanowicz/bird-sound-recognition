@@ -61,7 +61,7 @@ def process_files():
         pool.map(augment_save, os.listdir(src_path))
 
 if __name__ == "__main__":
-    # all noise files to 22050 to not to this every time they are applied
+    # resample all noise files to 22050 to not to this every time they are applied
     # for filename in os.listdir(noise_path):
     #     y, sr = librosa.load(noise_path + filename)
     #     audio_resampled = librosa.resample(y=y, orig_sr=sr, target_sr=22050)

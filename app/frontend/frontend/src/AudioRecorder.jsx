@@ -15,7 +15,6 @@ const AudioRecorder = ({ onAudioRecorded }) => {
             try {
                 const streamData = await navigator.mediaDevices.getUserMedia({
                     audio: true,
-                    video: false,
                 });
                 setStream(streamData);
             } catch (err) {
@@ -56,6 +55,24 @@ const AudioRecorder = ({ onAudioRecorded }) => {
         };
     };
 
+    const handleUpload = (e) => {
+        e.preventDefault()
+        const fileInput = e.target.querySelector('input[type="file"]');
+        const file = fileInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const audioBlob = new Blob([reader.result], { type: file.type })
+                const audioUrl = URL.createObjectURL(audioBlob)
+                onAudioRecorded(audioBlob, audioUrl)
+                navigate("/submit")
+            }
+            reader.readAsArrayBuffer(file)
+        }
+        
+    }
+
     return (
         <div className="flex justify-center items-center flex-col">
             <h2 className="text-xl">{recordingStatus == "recording" ? "Recording..." : "Tap to record"}</h2>
@@ -74,8 +91,9 @@ const AudioRecorder = ({ onAudioRecorded }) => {
                 ): null}
             </div>
             <div>
-                <form action="">
-                    <input type="file"/>
+                <form action="" className="flex flex-col justify-center items-center" onSubmit={handleUpload}>
+                    <h2 className="text-xl">Or upload file</h2>
+                    <input className="m-[1em]" type="file"/>
                     <button type="submit">Upload</button>
                 </form>
             </div>

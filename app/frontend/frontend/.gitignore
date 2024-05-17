@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+segmented
+melspectrograms
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
