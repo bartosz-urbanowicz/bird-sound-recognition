@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const mimeType = "audio/webm";
+const mimeType = "audio/wav";
 
 const AudioRecorder = ({ onAudioRecorded }) => {
     const navigate = useNavigate()
@@ -31,7 +31,7 @@ const AudioRecorder = ({ onAudioRecorded }) => {
 
     const startRecording = async () => {
         setRecordingStatus("recording");
-        const media = new MediaRecorder(stream, { type: mimeType });
+        const media = new MediaRecorder(stream);
         mediaRecorder.current = media;
         mediaRecorder.current.start();
         let localAudioChunks = [];
@@ -47,6 +47,7 @@ const AudioRecorder = ({ onAudioRecorded }) => {
         mediaRecorder.current.stop();
         mediaRecorder.current.onstop = () => {
            const audioBlob = new Blob(audioChunks, { type: mimeType });
+           console.log(audioBlob)
            const audioUrl = URL.createObjectURL(audioBlob);
            onAudioRecorded(audioBlob, audioUrl);
            setAudioChunks([]);
@@ -75,7 +76,7 @@ const AudioRecorder = ({ onAudioRecorded }) => {
 
     return (
         <div className="flex justify-center items-center flex-col">
-            <h2 className="text-xl">{recordingStatus == "recording" ? "Recording..." : "Tap to record"}</h2>
+            {/* <h2 className="text-xl">{recordingStatus == "recording" ? "Recording..." : "Tap to record"}</h2>
             <div className={`flex justify-center items-center border border-black rounded-full h-[2em] w-[2em] text-3xl m-[1em] ${
                 recordingStatus == "recording" ? "blob" : null
             }`}>
@@ -89,10 +90,10 @@ const AudioRecorder = ({ onAudioRecorded }) => {
                         <i className="fa-solid fa-stop"></i>
                     </button>
                 ): null}
-            </div>
+            </div> */}
             <div>
                 <form action="" className="flex flex-col justify-center items-center" onSubmit={handleUpload}>
-                    <h2 className="text-xl">Or upload file</h2>
+                    <h2 className="text-xl">Upload file</h2>
                     <input className="m-[1em]" type="file"/>
                     <button type="submit">Upload</button>
                 </form>
