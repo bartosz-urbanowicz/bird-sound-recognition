@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react';
 import { birdNames, birdImages } from './birds.js'
 import { useNavigate } from 'react-router-dom';
 
-const Submit = ({ audioBlob, audioUrl }) => {
+const Submit = ({ audioBlob, audioUrl, model }) => {
     const [predictedClass, setPredictedClass] = useState("")
     const [accuracy, setAccuracy] = useState(0)
     const navigate = useNavigate()
 
-    const api_url = "http://localhost:5000/"
+    const api_url = "http://localhost:5000/api/predict/"
 
     function blobToBase64(blob) {
         return new Promise((resolve, _) => {
@@ -22,7 +22,7 @@ const Submit = ({ audioBlob, audioUrl }) => {
       const postData = async () => {
         const base64audio = await blobToBase64(audioBlob)
         try {
-            const response = await axios.post(api_url, {data: base64audio});
+            const response = await axios.post(api_url, {data: base64audio, model: model});
             setPredictedClass(response.data["bird_name"])
             setAccuracy(response.data["probability"])
           } catch (error) {

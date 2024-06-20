@@ -1,0 +1,18 @@
+DROP TABLE IF EXISTS observations;
+
+CREATE TABLE observations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    species TEXT NOT NULL,
+    location TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL
+);
