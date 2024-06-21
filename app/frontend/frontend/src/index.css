@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    .pushable {
+		@apply bg-green-800 rounded-lg border-none p-0 cursor-pointer focus:outline-none focus:outline-offset-4
+	}
+	.front {
+		@apply block py-3 px-10 rounded-lg text-lg bg-green-700 text-white transform -translate-y-1.5 hover:brightness-90
+	}
+
+	.navbar-button {
+		@apply hover:brightness-90
+	}
+}
+
+.navbar-button:active {
+	transform: translateY(2px);
+}
+
+.pushable:active .front {
+transform: translateY(-2px);
+}
+
 .blob {
 	border-radius: 50%;
 	box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);

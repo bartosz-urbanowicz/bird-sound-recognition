@@ -38,7 +38,7 @@ const Submit = ({ audioBlob, audioUrl, model }) => {
     }
 
     return (
-        <div className='flex flex-col'>
+        <div className='flex justify-center items-center flex-col bg-green-200 p-[2rem] rounded-xl'>
             {predictedClass == "" ? 
               <div className='flex flex-col justify-center items-center'>
                 <div className="lds-ripple"><div></div><div></div></div>
@@ -55,7 +55,7 @@ const Submit = ({ audioBlob, audioUrl, model }) => {
                 <i className="fa-solid fa-download m-[0.5em]"></i>
                 </a>
             </div>
-            <button onClick={handleClick}>Go back</button>
+            <button className="pushable mt-[2rem]" onClick={handleClick}><span className="front">Back</span></button>
         </div>
     );
 };

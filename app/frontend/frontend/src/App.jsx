@@ -19,7 +19,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Navbar loggedIn={true}/>
+      <Navbar loggedIn={false}/>
       <div className="flex justify-center items-center h-[calc(100vh-4rem)] bg-green-100">
         <Routes>
           <Route path="/" element={<AudioRecorder onAudioRecorded={handleAudioRecorded}/>}/>

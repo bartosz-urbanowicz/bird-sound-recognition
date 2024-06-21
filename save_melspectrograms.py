@@ -66,6 +66,7 @@ def create_melspectrograms(df):
         print("calculating melspectrograms for file " + str(i) + "/" + str(len(df)), end="\r")
         filename = df.iloc[i]["filename"]
         y, sr = librosa.load(data_path + filename)
+        print(sr)
         melspectrogram = librosa.feature.melspectrogram(
             y=y, 
             sr=sr,
@@ -75,6 +76,7 @@ def create_melspectrograms(df):
             fmin=FMIN, # high-pass filter
             fmax=sr/2
         )
+        print(melspectrogram.shape)
         features.append(melspectrogram)
         labels.append(class_labels.index(df.iloc[i]["category"]))
     return np.array(features), np.array(labels)
@@ -83,11 +85,11 @@ X_train, y_train = create_melspectrograms(train_df)
 X_test, y_test = create_melspectrograms(test_df)
 X_val, y_val = create_melspectrograms(validate_df)
 
-np.save("data/rnn_3_spectrograms/X_train.npy", X_train)
-np.save("data/rnn_3_spectrograms/y_train.npy", y_train)
-np.save("data/rnn_3_spectrograms/X_test.npy", X_test)
-np.save("data/rnn_3_spectrograms/y_test.npy", y_test)
-np.save("data/rnn_3_spectrograms/X_val.npy", X_val)
-np.save("data/rnn_3_spectrograms/y_val.npy", y_val)
+np.save("data/rnn_3_spectrograms2/X_train.npy", X_train)
+np.save("data/rnn_3_spectrograms2/y_train.npy", y_train)
+np.save("data/rnn_3_spectrograms2/X_test.npy", X_test)
+np.save("data/rnn_3_spectrograms2/y_test.npy", y_test)
+np.save("data/rnn_3_spectrograms2/X_val.npy", X_val)
+np.save("data/rnn_3_spectrograms2/y_val.npy", y_val)
 
 

@@ -89,7 +89,7 @@ Turdus philomelos (śpiewak)
 ![](https://i.postimg.cc/1ztN4ZGP/Fringilla-coelebs-107-10.jpg)
 Fringilla coelebs (zięba)
 
-### Training model
+### CNN model
 
 Model layers:
 
@@ -125,3 +125,31 @@ Model accuracy and loss during training
 ### Evaluating model
 The model scored 70% accuracy on test dataset
 
+### LSTM model
+
+Model layers:
+
+- LSTM (128 units, l2 regularization)
+- dropout (0.3)
+<br/><br/>
+- LSTM (64 units, l2 regularization)
+- dropout (0.3)
+<br/><br/>
+- dense (64, relu, l2 regularization)
+- dropout (0.3)
+<br/><br/>
+- dense (64, relu, l2 regularization)
+- dropout (0.3)
+<br/><br/>
+- dense (10, softmax, l2 regularization)
+
+Optimizer: Adam with 0.001 learning rate\
+Loss function: sparse categorical crossentropy\
+Callbacks: early stopping, learning rate reduction\
+
+### Accuracy and loss plot
+
+![](https://i.postimg.cc/qRTtHVmn/rnn-model-3-10-classes.png)
+
+### Evaluation
+55% accuracy

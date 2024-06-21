@@ -1,7 +1,5 @@
-from keras.models import load_model, Sequential
+from keras.models import load_model
 import os
-from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, Activation, BatchNormalization
-from kapre.composed import get_melspectrogram_layer
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import numpy as np
 
@@ -35,7 +33,7 @@ def load_and_preprocess_image(image_path):
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
-def predict():
+def predict_cnn():
     predictions_added = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     for filename in os.listdir(image_path):
         img_array = load_and_preprocess_image(image_path + filename)

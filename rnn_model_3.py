@@ -16,7 +16,6 @@ os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
 K.clear_session()
 
 FRAME_SIZE = 1024
-HOP_LENGTH = 256
 FAST_RUN = False
 BATCH_SIZE = 16
 
