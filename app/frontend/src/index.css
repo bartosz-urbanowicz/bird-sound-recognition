@@ -11,7 +11,7 @@
 	}
 
 	.navbar-button {
-		@apply hover:brightness-90
+		@apply hover:brightness-90 text-white text-xl
 	}
 }
 

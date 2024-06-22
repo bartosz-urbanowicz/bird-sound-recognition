@@ -5,7 +5,8 @@ CREATE TABLE observations (
     user_id INTEGER,
     time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     species TEXT NOT NULL,
-    location TEXT NOT NULL,
+    latitude FLOAT,
+    longitude FLOAT,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 

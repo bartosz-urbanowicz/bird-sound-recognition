@@ -42,7 +42,7 @@ const AudioRecorder = ({ onAudioRecorded }) => {
                         </select>
                     </div>
                 </div>
-                <button type="submit" className="pushable mt-[2rem]"><span className="front">Upload</span></button>
+                <button type="submit" className="pushable mt-[2rem]"><span className="front">Identify</span></button>
             </form>
         </div>
     </div>

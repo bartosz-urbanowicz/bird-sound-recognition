@@ -8,8 +8,8 @@ def init_db():
     with open('schema.sql') as f:
         connection.executescript(f.read())
     cur = connection.cursor()
-    cur.execute("INSERT INTO observations (species, location) VALUES (?, ?)",
-                ("Parus major", "1,1")
+    cur.execute("INSERT INTO observations (species, user_id, latitude, longtitude) VALUES (?, ?, ?, ?)",
+                ("Parus major", 1, 1, 1)
                 )
     cur.execute("INSERT INTO users (username, email) VALUES (?, ?)",
                 ("admin", "admin@mail.com")
